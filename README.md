@@ -1,141 +1,228 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# Philippine Blockchain Budget Transparency System
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+A comprehensive blockchain-based budget transparency system for the Philippine government, implementing the concepts proposed in Senate Bill No. 1330.
 
-## ✨ Technology Stack
+## Overview
 
-This scaffold provides a robust foundation built with:
+This system provides real-time tracking of government budget allocations, fund releases, and expenditures using blockchain technology for immutable record-keeping and enhanced transparency.
 
-### 🎯 Core Framework
-- **⚡ Next.js 15** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+## Features
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+### Core Functionality
+- **Budget Allocation Management**: Create and track government budget allocations
+- **Fund Release Tracking**: Monitor fund disbursements to agencies
+- **Expenditure Recording**: Document how funds are spent with beneficiary details
+- **Project Management**: Associate budgets with specific government projects
+- **Agency Management**: Comprehensive database of Philippine government agencies
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+### Blockchain Integration
+- **Smart Contract Operations**: Ethereum-based smart contract for immutable records
+- **Data Integrity Verification**: Real-time verification between database and blockchain
+- **Transaction History**: Complete audit trail of all budget operations
+- **Immutable Records**: Tamper-proof budget transaction recording
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Axios** - Promise-based HTTP client
+### Advanced Features
+- **Real-time Dashboard**: Live updates of budget metrics and utilization rates
+- **Budget Flow Visualization**: Interactive visualization of fund movement
+- **Advanced Analytics**: KPIs, performance indicators, and financial trends
+- **Role-based Access Control**: Different permissions for DBM, COA, Agency users
+- **Document Management**: IPFS integration for contract and document storage
+- **Notification System**: Alerts for budget events and status changes
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation Node.js and TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+## Technology Stack
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+- **Frontend**: Next.js 15 with TypeScript, Tailwind CSS, shadcn/ui components
+- **Backend**: Next.js API Routes with TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **Blockchain**: Ethereum/Polygon smart contracts (Solidity)
+- **Storage**: IPFS for document storage
+- **Real-time**: WebSocket connections for live updates
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+## Getting Started
 
-## 🎯 Why This Scaffold?
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL database
+- Git
+- npm or yarn
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+### Installation
 
-## 🚀 Quick Start
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd budget-transparency-system
+   ```
 
-```bash
-# Install dependencies
-npm install
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Start development server
-npm run dev
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` with your database and blockchain configuration:
+   ```
+   DATABASE_URL="postgresql://username:password@localhost:5432/budget_db"
+   BLOCKCHAIN_RPC_URL="https://polygon-mainnet.infura.io/v3/your-key"
+   CONTRACT_ADDRESS="0x..."
+   WALLET_PRIVATE_KEY="your-wallet-private-key"
+   ```
 
-# Build for production
-npm run build
+4. **Set up the database**
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   npm run seed
+   ```
 
-# Start production server
-npm start
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Usage
+
+### For Citizens
+- View budget allocations and expenditures
+- Track fund utilization across government agencies
+- Verify data integrity through blockchain verification
+- Access public documents and contracts
+
+### For Government Agencies
+- Submit budget allocation requests
+- Record fund releases and expenditures
+- Manage project documentation
+- Monitor budget utilization in real-time
+
+### For Auditors (COA)
+- Verify transactions against blockchain records
+- Generate audit reports
+- Identify discrepancies and anomalies
+- Monitor compliance with budget regulations
+
+## API Endpoints
+
+### Core API
+- `GET /api/agencies` - List all government agencies
+- `POST /api/allocations` - Create new budget allocation
+- `GET /api/allocations` - List all allocations
+- `POST /api/releases` - Record fund release
+- `POST /api/expenditures` - Record expenditure
+- `GET /api/dashboard` - Get dashboard statistics
+
+### Blockchain API
+- `POST /api/blockchain/allocate` - Record allocation on blockchain
+- `POST /api/blockchain/release` - Record release on blockchain
+- `POST /api/blockchain/expend` - Record expenditure on blockchain
+- `GET /api/blockchain/verify` - Verify data integrity
+- `GET /api/blockchain/transactions` - Get transaction history
+
+## Smart Contract
+
+The system uses a Solidity smart contract deployed on Ethereum/Polygon:
+
+```solidity
+contract BudgetTransparency {
+    struct Allocation { uint id; string agency; string project; uint256 amount; }
+    struct Release { uint id; uint allocationId; uint256 amount; string description; }
+    struct Expenditure { uint id; uint releaseId; uint256 amount; string beneficiary; }
+    
+    function createAllocation(string memory agency, string memory project, uint256 amount) public;
+    function releaseFunds(uint allocationId, uint256 amount, string memory description) public;
+    function recordExpenditure(uint releaseId, uint256 amount, string memory beneficiary) public;
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+## Data Structure
 
-## 🤖 Powered by Z.ai
+### Philippine Government Agencies
+The system includes all major Philippine government agencies:
+- Executive Departments (DBM, DOF, DPWH, DepEd, DOH, DICT, etc.)
+- Constitutional Commissions (COA, COMELEC, CSC)
+- Sectoral Agencies (NEDA, PSA, TESDA)
+- Local Government Units (MMDA, Provincial, City, Municipal)
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+### Budget Categories
+- Personnel Services
+- Maintenance and Other Operating Expenses
+- Capital Outlays
+- Financial Expenses
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+## Deployment
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+### Production Deployment
+1. **Build the application**
+   ```bash
+   npm run build
+   ```
 
-## 📁 Project Structure
+2. **Start production server**
+   ```bash
+   npm start
+   ```
 
-```
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
-```
+3. **Set up reverse proxy** (nginx example)
+   ```nginx
+   server {
+       listen 80;
+       server_name your-domain.com;
+       
+       location / {
+           proxy_pass http://localhost:3000;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection 'upgrade';
+           proxy_set_header Host $host;
+           proxy_cache_bypass $http_upgrade;
+       }
+   }
+   ```
 
-## 🎨 Available Features & Components
+### Blockchain Deployment
+1. **Compile contract**
+   ```bash
+   npx hardhat compile
+   ```
 
-This scaffold includes a comprehensive set of modern web development tools:
+2. **Deploy to network**
+   ```bash
+   npx hardhat run scripts/deploy.js --network polygon
+   ```
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+## Contributing
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+## License
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Axios + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+## Acknowledgments
 
-## 🤝 Get Started with Z.ai
+- Philippine Senate for proposing SB 1330
+- Department of Budget and Management (DBM)
+- Commission on Audit (COA)
+- All government agencies participating in transparency initiatives
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+## Roadmap
+
+- [ ] Mobile application development
+- [ ] Multi-language support (Filipino, English)
+- [ ] Advanced data visualization tools
+- [ ] Machine learning for anomaly detection
+- [ ] Integration with other government systems
+- [ ] Public API for third-party developers
 
 ---
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+**Transparency. Accountability. Good Governance.**
