@@ -1,0 +1,260 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(STAFF)
+  agencyId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agency   Agency?  @relation(fields: [agencyId], references: [id])
+  posts    Post[]
+}
+
+enum UserRole {
+  DBM_ADMIN
+  COA_AUDITOR
+  AGENCY_HEAD
+  SYSTEM_ADMIN
+  STAFF
+  PUBLIC
+}
+
+model Agency {
+  id              String      @id @default(cuid())
+  name            String
+  acronym         String?
+  category        AgencyCategory
+  description     String?
+  parentAgencyId  String?
+  address         String?
+  contactEmail    String?
+  contactPhone    String?
+  website         String?
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  parentAgency    Agency?      @relation("AgencyHierarchy", fields: [parentAgencyId], references: [id])
+  subAgencies     Agency[]     @relation("AgencyHierarchy")
+  users           User[]
+  allocations    Allocation[]
+  releases        Release[]
+  projects        Project[]
+}
+
+enum AgencyCategory {
+  NATIONAL
+  LOCAL
+  CONSTITUTIONAL
+  SECTORAL
+  REGIONAL
+}
+
+model Allocation {
+  id          String   @id @default(cuid())
+  agencyId    String
+  title       String
+  description String?
+  amount      Float
+  fiscalYear  Int
+  status      AllocationStatus @default(PROPOSED)
+  uacsCode    String?  // Unified Accounts Code Structure
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  agency    Agency    @relation(fields: [agencyId], references: [id])
+  releases  Release[]
+  projects  Project[]
+}
+
+enum AllocationStatus {
+  PROPOSED
+  APPROVED
+  RELEASED
+  COMPLETED
+  CANCELLED
+}
+
+model Release {
+  id            String   @id @default(cuid())
+  allocationId  String
+  agencyId      String
+  amount        Float
+  description   String?
+  referenceNo   String?
+  status        ReleaseStatus @default(PENDING)
+  releasedAt    DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  allocation  Allocation  @relation(fields: [allocationId], references: [id])
+  agency      Agency      @relation(fields: [agencyId], references: [id])
+  expenditures Expenditure[]
+  projects    Project[]
+}
+
+enum ReleaseStatus {
+  PENDING
+  APPROVED
+  RELEASED
+  COMPLETED
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  allocationId String
+  agencyId    String
+  releaseId   String?
+  name        String
+  description String?
+  budget      Float
+  location    String?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      ProjectStatus @default(PLANNING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  allocation Allocation @relation(fields: [allocationId], references: [id])
+  agency     Agency     @relation(fields: [agencyId], references: [id])
+  release   Release?   @relation(fields: [releaseId], references: [id])
+  expenditures Expenditure[]
+}
+
+enum ProjectStatus {
+  PLANNING
+  ONGOING
+  COMPLETED
+  SUSPENDED
+  CANCELLED
+}
+
+model Expenditure {
+  id            String   @id @default(cuid())
+  releaseId     String
+  projectId     String?
+  amount        Float
+  beneficiary   String
+  description   String?
+  documentHash  String?  // IPFS hash or other document reference
+  category      ExpenditureCategory
+  status        ExpenditureStatus @default(PENDING)
+  spentAt       DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  release  Release  @relation(fields: [releaseId], references: [id])
+  project  Project? @relation(fields: [projectId], references: [id])
+}
+
+enum ExpenditureCategory {
+  PERSONNEL
+  MOOE
+  CAPITAL_OUTLAY
+  FINANCIAL
+  OTHERS
+}
+
+enum ExpenditureStatus {
+  PENDING
+  APPROVED
+  SPENT
+  VERIFIED
+  REJECTED
+}
+
+// Blockchain transaction records for immutability
+model BlockchainTransaction {
+  id            String   @id @default(cuid())
+  txHash        String   @unique
+  blockNumber   Int?
+  fromAddress   String
+  toAddress    String?
+  amount        Float?
+  gasUsed       Int?
+  gasPrice      Float?
+  status        TxStatus
+  dataType      DataType
+  dataId        String   // Reference to the actual data (allocation, release, expenditure)
+  metadata      String?  // Additional transaction metadata
+  createdAt     DateTime @default(now())
+
+  @@map("blockchain_transactions")
+}
+
+enum TxStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REVERTED
+}
+
+enum DataType {
+  ALLOCATION
+  RELEASE
+  EXPENDITURE
+  PROJECT
+}
+
+// Audit logs for transparency
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      String
+  entityType  String
+  entityId    String
+  oldValues   String?
+  newValues   String?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// Document management for IPFS integration
+model Document {
+  id          String   @id @default(cuid())
+  fileName    String
+  fileType    String
+  fileSize    Int
+  ipfsHash    String   @unique
+  ipfsUrl     String
+  documentType String   // e.g., 'CONTRACT', 'INVOICE', 'REPORT', 'CERTIFICATE'
+  referenceId String   // ID of related entity (allocation, release, expenditure, etc.)
+  description String?
+  status      String   @default("ACTIVE") // ACTIVE, INACTIVE, DELETED
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("documents")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+}
